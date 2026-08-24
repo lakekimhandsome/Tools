@@ -14,22 +14,31 @@ def get_video_id(url):
 
     raise ValueError("유효한 YouTube URL이 아닙니다.")
 
-if len(sys.argv) > 1:
-    url = sys.argv[1]
-else:
-    url = input("유튜브 링크: ")
 
-video_id = get_video_id(url)
+def get_transcript(url):
+    video_id = get_video_id(url)
 
-api = YouTubeTranscriptApi()
+    api = YouTubeTranscriptApi()
 
-try:
-    transcript = api.fetch(video_id, languages=["ko", "en"])
+    transcript = api.fetch(
+        video_id,
+        languages=["ko", "en"]
+    )
 
-    print("\n===== TRANSCRIPT =====\n")
+    return "\n".join(snippet.text for snippet in transcript)
 
-    for snippet in transcript:
-        print(snippet.text)
 
-except Exception as e:
-    print(f"자막을 가져오지 못했습니다: {e}")
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        url = sys.argv[1]
+    else:
+        url = input("유튜브 링크: ")
+
+    try:
+        transcript = get_transcript(url)
+
+        print("\n===== TRANSCRIPT =====\n")
+        print(transcript)
+
+    except Exception as e:
+        print(f"자막을 가져오지 못했습니다: {e}")
