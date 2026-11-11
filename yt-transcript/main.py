@@ -22,7 +22,7 @@ def get_transcript(url):
 
     transcript = api.fetch(
         video_id,
-        languages=["ko", "en"]
+        languages=["ko", "en", "en-US"]
     )
 
     return "\n".join(snippet.text for snippet in transcript)
